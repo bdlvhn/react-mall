@@ -1,8 +1,10 @@
-import logo from "./logo.svg";
-import { Navbar, Container, Nav, NavDropdown, Carousel } from "react-bootstrap";
+import { Navbar, Container, Nav, NavDropdown } from "react-bootstrap";
 import "./App.css";
 import { useState } from "react";
 import data from "./data.js";
+import Detail from "./Detail.js";
+
+import { Link, Route, Switch } from "react-router-dom";
 
 function App() {
   let [cs, setCs] = useState([data]);
@@ -30,8 +32,13 @@ function App() {
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="me-auto">
-              <Nav.Link href="#home">Home</Nav.Link>
-              <Nav.Link href="#link">Link</Nav.Link>
+              <Nav.Link>
+                {" "}
+                <Link to="/">Home</Link>
+              </Nav.Link>
+              <Nav.Link>
+                <Link to="/detail">Detail</Link>
+              </Nav.Link>
               <NavDropdown title="Dropdown" id="basic-nav-dropdown">
                 <NavDropdown.Item href="#action/3.1">Action</NavDropdown.Item>
                 <NavDropdown.Item href="#action/3.2">
@@ -49,17 +56,27 @@ function App() {
           </Navbar.Collapse>
         </Container>
       </Navbar>
-      <div className="background">
-        <h1>Seasonal Sale</h1>
-        <p>lorem</p>
-      </div>
-      <div className="container">
-        <div className="row">
-          {cs[0].map((row, i) => (
-            <Card row={row} i={i} key={i} />
-          ))}
-        </div>
-      </div>
+      <Switch>
+        <Route exact path="/">
+          <div className="background">
+            <h1>Seasonal Sale</h1>
+            <p>lorem</p>
+          </div>
+          <div className="container">
+            <div className="row">
+              {cs[0].map((row, i) => (
+                <Card row={row} i={i} key={i} />
+              ))}
+            </div>
+          </div>
+        </Route>
+        <Route path="/detail/:id">
+          <Detail data={cs} />
+        </Route>
+        <Route path="/:id">
+          <div>아무거나 적었을 때</div>
+        </Route>
+      </Switch>
     </div>
   );
 }
