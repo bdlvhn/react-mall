@@ -1,13 +1,14 @@
 import { Navbar, Container, Nav, NavDropdown } from "react-bootstrap";
 import "./App.css";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import data from "./data.js";
 import Detail from "./Detail.js";
 
 import { Link, Route, Switch } from "react-router-dom";
 
 function App() {
-  let [cs, setCs] = useState([data]);
+  const [cs, setCs] = useState(data);
+  const [stock, setStock] = useState([10, 11, 12]);
 
   const Card = (props) => {
     return (
@@ -32,12 +33,11 @@ function App() {
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="me-auto">
-              <Nav.Link>
-                {" "}
-                <Link to="/">Home</Link>
+              <Nav.Link as={Link} to="/">
+                Home
               </Nav.Link>
-              <Nav.Link>
-                <Link to="/detail">Detail</Link>
+              <Nav.Link as={Link} to="/detail">
+                Detail
               </Nav.Link>
               <NavDropdown title="Dropdown" id="basic-nav-dropdown">
                 <NavDropdown.Item href="#action/3.1">Action</NavDropdown.Item>
@@ -64,14 +64,26 @@ function App() {
           </div>
           <div className="container">
             <div className="row">
-              {cs[0].map((row, i) => (
+              {cs.map((row, i) => (
                 <Card row={row} i={i} key={i} />
               ))}
             </div>
+            <button
+              onClick={async () => {
+                await fetch("https://codingapple1.github.io/shop/data2.json")
+                  .then((response) => response.json())
+                  .then((data) => {
+                    setCs([...cs, ...data]);
+                  });
+              }}
+              className="btn btn-primary"
+            >
+              더보기
+            </button>
           </div>
         </Route>
         <Route path="/detail/:id">
-          <Detail data={cs} />
+          <Detail data={cs} stock={stock} setStock={setStock} />
         </Route>
         <Route path="/:id">
           <div>아무거나 적었을 때</div>
